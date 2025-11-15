@@ -11,7 +11,12 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 console.log(__dirname)
 
-const publisher = redis.createClient();
+const publisher = redis.createClient({
+  socket: {
+    host: process.env.REDIS_HOST || "redis",
+    port: Number(process.env.REDIS_PORT) || 6379,
+  }
+});
 publisher.connect();
 
 

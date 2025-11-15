@@ -5,8 +5,8 @@ const execPromise = util.promisify(exec);
 
 export async function clearBuildFolders() {
   const cmd = `
-     rm -rf ~/vercel-deploy-service/output/* &&
-     rm -rf ~/vercel-deploy-service/builded-folder/*
+     rm -rf /app/output/* &&
+     rm -rf /app/builded-folder/*       
   `;
 
   try {
