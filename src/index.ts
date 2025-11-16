@@ -7,12 +7,7 @@ import path from "path";
 import {clearBuildFolders} from "./utils/clearFolders.js"
 
 
-const subscriber = createClient({
-  socket: {
-    host: process.env.REDIS_HOST || "redis",
-    port: Number(process.env.REDIS_PORT) || 6379,
-  }
-});
+const subscriber = createClient();
 
 subscriber.on?.("ready", () => {
   console.log("✅ Redis connected");

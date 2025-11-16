@@ -5,8 +5,8 @@ const execPromise = util.promisify(exec);
 
 export async function clearBuildFolders() {
   const cmd = `
-     rm -rf /app/output/* &&
-     rm -rf /app/builded-folder/*       
+     rm -rf output/* &&
+     rm -rf builded-folder/*       
   `;
 
   try {

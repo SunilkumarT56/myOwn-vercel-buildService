@@ -1,19 +1,19 @@
 import { execSync } from "child_process";
 import fs from "fs";
 import redis from "redis";
+import path from "path";
+import { fileURLToPath } from "url";
 
-const publisher = redis.createClient({
-  socket: {
-    host: process.env.REDIS_HOST || "redis",
-    port: Number(process.env.REDIS_PORT) || 6379,
-  }
-});
+
+const publisher = redis.createClient();
 publisher.connect();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 export async function buildReactProject(deploymentId: string) {
   // 🔥 Absolute paths inside deploy-service container
-  const projectPath = `/app/output/${deploymentId}`;
-  const outputPath = `/app/builded-folder/${deploymentId}`;
+  const projectPath = path.join(__dirname, "../../output", deploymentId);
+  const outputPath = path.join(__dirname, "../../builded-folder", deploymentId);
 
   // 🔥 Make sure folders exist BEFORE running docker
   fs.mkdirSync(projectPath, { recursive: true });
@@ -38,11 +38,11 @@ export async function buildReactProject(deploymentId: string) {
           elif [ -f yarn.lock ]; then
             npm i -g yarn >/dev/null 2>&1 && yarn install --frozen-lockfile
           else
-            npm install --include=dev --silent
+            npm install --legacy-peer-deps
           fi
 
           # Build
-          (npx vite build || yarn build || pnpm build)
+          (npm run build || yarn build || pnpm build || npx vite build)
 
           mkdir -p /build
 
@@ -64,7 +64,6 @@ export async function buildReactProject(deploymentId: string) {
 
     console.log(`✅ Build complete for ${deploymentId}`);
     await publisher.hSet("status", deploymentId, "builded");
-
   } catch (err) {
     console.error(`❌ Build failed for ${deploymentId}:`);
     throw err;
