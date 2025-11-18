@@ -3,8 +3,9 @@
 *Backend Engineering • DevOps • Distributed Systems • PSG Tech*
 
 ---
+![Uploading Vercel-clone.png…]()
 
----<img width="10772" height="10272" alt="Vercel-clone" src="https://github.com/user-attachments/assets/069d8498-e58d-4adc-9383-f45a2cbcb605" />
+
 ## **Overview**
 A fully functional deployment platform inspired by Vercel.
 
