@@ -3,7 +3,9 @@ import fs from "fs";
 import redis from "redis";
 import path from "path";
 import { fileURLToPath } from "url";
+import yaml from "js-yaml";
 
+const config: any = yaml.load(fs.readFileSync("./vercel-clone.yml", "utf-8"));
 
 const publisher = redis.createClient();
 publisher.connect();
@@ -11,11 +13,13 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 export async function buildReactProject(deploymentId: string) {
-  // 🔥 Absolute paths inside deploy-service container
-  const projectPath = path.join(__dirname, "../../output", deploymentId);
+  let projectPath = path.join(__dirname, "../../output", deploymentId); //   user/sunilkumar/vercel-build-service/output/<id>/<exact path>
   const outputPath = path.join(__dirname, "../../builded-folder", deploymentId);
 
-  // 🔥 Make sure folders exist BEFORE running docker
+ if (config.root && config.root !== "") {
+    projectPath = path.join(projectPath, config.root);
+  }
+
   fs.mkdirSync(projectPath, { recursive: true });
   fs.mkdirSync(outputPath, { recursive: true });
 
